@@ -81,8 +81,7 @@ class _PaymentSheetScreenState extends State<PaymentSheetDefferedScreen> {
     );
   }
 
-  Future<void> _createPaymentIntentAndConfirmToUser(
-      String paymentMethodId) async {
+  Future<void> _createPaymentIntentAndConfirmToUser(String paymentMethodId) async {
     final url = Uri.parse('$kApiUrl/payment-intent-for-payment-sheet');
     final response = await http.post(
       url,
@@ -98,12 +97,10 @@ class _PaymentSheetScreenState extends State<PaymentSheetDefferedScreen> {
       throw Exception(body['error']);
     }
 
-    await Stripe.instance.intentCreationCallback(
-        IntentCreationCallbackParams(clientSecret: body['clientSecret']));
+    await Stripe.instance.intentCreationCallback(IntentCreationCallbackParams(clientSecret: body['clientSecret']));
   }
 
-  Future<void> _createSetupIntentAndConfirmToUser(
-      String paymentMethodId) async {
+  Future<void> _createSetupIntentAndConfirmToUser(String paymentMethodId) async {
     final url = Uri.parse('$kApiUrl/create-setup-intent');
     final response = await http.post(
       url,
@@ -119,8 +116,7 @@ class _PaymentSheetScreenState extends State<PaymentSheetDefferedScreen> {
       throw Exception(body['error']);
     }
 
-    await Stripe.instance.intentCreationCallback(
-        IntentCreationCallbackParams(clientSecret: body['clientSecret']));
+    await Stripe.instance.intentCreationCallback(IntentCreationCallbackParams(clientSecret: body['clientSecret']));
   }
 
   Future<void> initPaymentSheetPaymentMode() async {
@@ -213,66 +209,29 @@ class _PaymentSheetScreenState extends State<PaymentSheetDefferedScreen> {
 
       // create some billingdetails
       final billingDetails = BillingDetails(
-        name: 'Flutter Stripe',
+        name: 'Vayu Robotics',
         email: 'email@stripe.com',
         phone: '+48888000888',
-        address: Address(
-          city: 'Houston',
-          country: 'US',
-          line1: '1459  Circle Drive',
-          line2: '',
-          state: 'Texas',
-          postalCode: '77063',
-        ),
+        // address: Address(
+        //   city: 'Houston',
+        //   country: 'US',
+        //   line1: '1459  Circle Drive',
+        //   line2: '',
+        //   state: 'Texas',
+        //   postalCode: '77063',
+        // ),
       ); // mocked data for tests
 
       // 2. initialize the payment sheet
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           // Main params
-          returnURL: 'flutterstripe://flutterstripe://redirect',
           merchantDisplayName: 'Flutter Stripe Store Demo',
-          intentConfiguration: IntentConfiguration(
-              mode: IntentMode.setupMode(
-                currencyCode: 'USD',
-                setupFutureUsage: IntentFutureUsage.OffSession,
-              ),
-              confirmHandler: (method, saveFuture) {
-                _createSetupIntentAndConfirmToUser(method.id);
-              }),
+          paymentIntentClientSecret: "pi_3RHkOy2fPNVKwDlg0BhYKHww_secret_mzNJwqjoeVnkST2VcfOzaHz0t",
+          // customerId: "cus_SC4vT6JxX9sWiM",
+          paymentMethodOrder: ['card'],
+          primaryButtonLabel: 'Pay Now 50\$',
 
-          // Extra params
-          primaryButtonLabel: 'Pay now',
-          applePay: PaymentSheetApplePay(
-            merchantCountryCode: 'DE',
-          ),
-          googlePay: PaymentSheetGooglePay(
-            merchantCountryCode: 'DE',
-            testEnv: true,
-          ),
-
-          style: ThemeMode.dark,
-          appearance: PaymentSheetAppearance(
-            colors: PaymentSheetAppearanceColors(
-              background: Colors.lightBlue,
-              primary: Colors.blue,
-              componentBorder: Colors.red,
-            ),
-            shapes: PaymentSheetShape(
-              borderWidth: 4,
-              shadow: PaymentSheetShadowParams(color: Colors.red),
-            ),
-            primaryButton: PaymentSheetPrimaryButtonAppearance(
-              shapes: PaymentSheetPrimaryButtonShape(blurRadius: 8),
-              colors: PaymentSheetPrimaryButtonTheme(
-                light: PaymentSheetPrimaryButtonThemeColors(
-                  background: Color.fromARGB(255, 231, 235, 30),
-                  text: Color.fromARGB(255, 235, 92, 30),
-                  border: Color.fromARGB(255, 235, 92, 30),
-                ),
-              ),
-            ),
-          ),
           billingDetails: billingDetails,
         ),
       );
@@ -324,3 +283,56 @@ class _PaymentSheetScreenState extends State<PaymentSheetDefferedScreen> {
 }
 
 enum _PaymentMode { paymentIntent, setupIntent }
+
+// intentConfiguration: IntentConfiguration(
+//     mode: IntentMode.setupMode(
+//       currencyCode: 'USD',
+//       setupFutureUsage: IntentFutureUsage.OffSession,
+//     ),
+//     confirmHandler: (method, saveFuture) {
+//       _createSetupIntentAndConfirmToUser(method.id);
+//     }),
+
+// Optional: Enable wallet payments (Apple Pay, Google Pay)
+// applePay: PaymentSheetApplePay(
+//   merchantCountryCode: 'US',
+// ),
+// googlePay: PaymentSheetGooglePay(
+//   merchantCountryCode: 'US',
+//   testEnv: true, // For testing environment
+// ),
+
+// paymentIntentClientSecret: "pi_3RHiyx2fPNVKwDlg1jCnrlWn",
+// style: ThemeMode.light,
+
+// Extra params
+// applePay: PaymentSheetApplePay(
+//   merchantCountryCode: 'DE',
+// ),
+// googlePay: PaymentSheetGooglePay(
+//   merchantCountryCode: 'DE',
+//   testEnv: true,
+// ),
+
+// style: ThemeMode.dark,
+// appearance: PaymentSheetAppearance(
+// colors: PaymentSheetAppearanceColors(
+//   background: Colors.lightBlue,
+//   primary: Colors.red,
+//   componentBorder: Colors.red,
+// ),
+// shapes: PaymentSheetShape(
+//   borderWidth: 4,
+//   shadow: PaymentSheetShadowParams(color: Colors.red),
+// ),
+// primaryButton: PaymentSheetPrimaryButtonAppearance(
+//   shapes: PaymentSheetPrimaryButtonShape(blurRadius: 8),
+//   colors: PaymentSheetPrimaryButtonTheme(
+//     light: PaymentSheetPrimaryButtonThemeColors(
+//       background: Color.fromARGB(255, 231, 235, 30),
+//       text: Color.fromARGB(255, 235, 92, 30),
+//       border: Color.fromARGB(255, 235, 92, 30),
+//     ),
+//   ),
+// ),
+// ),

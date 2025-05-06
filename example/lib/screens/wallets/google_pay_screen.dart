@@ -7,7 +7,8 @@ import 'package:pay/pay.dart' as pay;
 import 'package:stripe_example/config.dart';
 import 'package:stripe_example/widgets/example_scaffold.dart';
 
-import '../../.env.dart';
+import '../../.env.example.dart';
+
 
 const _paymentItems = [
   pay.PaymentItem(
